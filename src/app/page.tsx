@@ -86,6 +86,21 @@ export default function TenFramePage() {
     }
   };
 
+  // Dynamically set the height to handle mobile browsers' UI changes
+  useEffect(() => {
+    const updateHeight = () => {
+      document.documentElement.style.setProperty(
+        "--vh",
+        `${window.innerHeight * 0.01}px`,
+      );
+    };
+
+    updateHeight(); // Set height on mount
+    window.addEventListener("resize", updateHeight); // Update height on resize
+
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
+
   if (gameOver) {
     return (
       <EndScreen
@@ -101,12 +116,15 @@ export default function TenFramePage() {
   }
 
   return (
-    <div className="h-screen min-h-screen flex flex-col bg-gray-100 p-4 md:p-8 overflow-hidden">
+    <div
+      className="flex flex-col bg-gray-100 p-4 md:p-8 overflow-hidden"
+      style={{ height: "calc(var(--vh) * 100)" }}
+    >
       <audio ref={correctSound} src="/sounds/correct.mp3" preload="auto" />
       <audio ref={wrongSound} src="/sounds/wrong.mp3" preload="auto" />
       <audio ref={gameEndSound} src="/sounds/game-end.mp3" preload="auto" />
 
-      <div className="top-4 right-4 flex items-center justify-end gap-4">
+      <div className="absolute top-4 right-4 m-4 flex items-center gap-4">
         <div className="text-lg md:text-xl font-semibold">Time: {seconds}s</div>
         <button
           className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
@@ -116,9 +134,7 @@ export default function TenFramePage() {
         </button>
       </div>
 
-      {/* Responsive Layout */}
       <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-        {/* Left Ten Frame or Number */}
         <div className="flex items-center justify-center p-4 overflow-hidden">
           {mode !== "start" ? (
             <TenFrame filledCells={leftNumber!} />
@@ -127,12 +143,10 @@ export default function TenFramePage() {
           )}
         </div>
 
-        {/* "+" Symbol */}
         <div className="flex items-center justify-center">
           <div className="text-5xl md:text-6xl font-bold">+</div>
         </div>
 
-        {/* Right Ten Frame or Number */}
         <div className="flex items-center justify-center p-4 overflow-hidden">
           {mode === "double" ? (
             <TenFrame filledCells={rightNumber!} />
@@ -142,7 +156,6 @@ export default function TenFramePage() {
         </div>
       </div>
 
-      {/* Buttons Grid */}
       <div className="flex-1 flex flex-col items-center justify-between py-4 md:py-8">
         <Scoreboard correctCount={correctCount} wrongCount={wrongCount} />
         <div className="w-full h-full">
