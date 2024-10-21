@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface StartScreenProps {
   onStart: (mode: "start" | "single" | "double") => void;
 }
@@ -23,6 +25,9 @@ export default function StartScreen({ onStart }: StartScreenProps) {
       >
         Ten Frame for Both Numbers
       </button>
+      <Link href="/settings" className="mt-2 text-blue-500 hover:underline">
+        Settings
+      </Link>
     </div>
   );
 }
