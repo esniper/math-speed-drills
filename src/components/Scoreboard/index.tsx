@@ -8,7 +8,7 @@ export default function Scoreboard({
   wrongCount,
 }: ScoreboardProps) {
   return (
-    <div className="flex items-center space-x-8 text-xl">
+    <div className="flex items-center space-x-8 text-xl mb-10">
       <div className="flex items-center gap-2">
         <span className="text-green-600 font-bold">Correct:</span>
         <span>{correctCount}</span>

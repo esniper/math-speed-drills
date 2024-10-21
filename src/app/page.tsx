@@ -21,20 +21,17 @@ export default function TenFramePage() {
   const [gameOver, setGameOver] = useState(false);
   const [gameTime, setGameTime] = useState(120); // Default 2 minutes
 
-  // Audio references
   const correctSound = useRef<HTMLAudioElement | null>(null);
   const wrongSound = useRef<HTMLAudioElement | null>(null);
   const gameEndSound = useRef<HTMLAudioElement | null>(null);
 
   const correctAnswer = (leftNumber ?? 0) + (rightNumber ?? 0);
 
-  // Load game time from local storage
   useEffect(() => {
     const storedTime = localStorage.getItem("gameTime");
     if (storedTime) setGameTime(Number(storedTime));
   }, []);
 
-  // Timer logic
   useEffect(() => {
     const timer = setInterval(() => setSeconds((prev) => prev + 1), 1000);
     if (seconds >= gameTime) {
@@ -112,13 +109,15 @@ export default function TenFramePage() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100 p-6">
+    <div className="h-screen flex flex-col bg-gray-100 p-4 md:p-8">
+      {/* Preload audio elements */}
       <audio ref={correctSound} src="/sounds/correct.mp3" preload="auto" />
       <audio ref={wrongSound} src="/sounds/wrong.mp3" preload="auto" />
       <audio ref={gameEndSound} src="/sounds/game-end.mp3" preload="auto" />
 
+      {/* Timer and Restart Button */}
       <div className="absolute top-4 right-4 flex items-center gap-4">
-        <div className="text-xl font-semibold">Time: {seconds}s</div>
+        <div className="text-lg md:text-xl font-semibold">Time: {seconds}s</div>
         <button
           className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
           onClick={handleRestart}
@@ -127,20 +126,22 @@ export default function TenFramePage() {
         </button>
       </div>
 
-      <div className="flex flex-1 border-b border-gray-400">
-        <div className="flex-1 flex items-center justify-center border-r border-gray-400 p-4">
+      {/* Game Layout */}
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-gray-400">
+        <div className="flex items-center justify-center border-r border-gray-400 p-4">
           <TenFrame filledCells={leftNumber!} />
         </div>
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex items-center justify-center p-4">
           {showBothTenFrames ? (
             <TenFrame filledCells={rightNumber!} />
           ) : (
-            <div className="text-5xl">{rightNumber}</div>
+            <div className="text-4xl md:text-5xl">{rightNumber}</div>
           )}
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-between py-8">
+      {/* Bottom Section */}
+      <div className="flex-1 flex flex-col items-center py-4 md:py-8">
         <Scoreboard correctCount={correctCount} wrongCount={wrongCount} />
         <ButtonsGrid onClick={handleButtonClick} />
       </div>

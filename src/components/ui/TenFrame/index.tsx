@@ -1,4 +1,4 @@
-import Cell from "@/components/ui/cell";
+import Cell from "@/components/ui/Cell/index";
 
 interface TenFrameProps {
   filledCells: number; // Number of filled cells (between 0-10)
