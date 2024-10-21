@@ -76,6 +76,7 @@ export default function TenFramePage() {
   };
 
   const playSound = (audioElement: HTMLAudioElement | null) => {
+    console.log("Attempting to play");
     if (audioElement) {
       const playPromise = audioElement.play();
       if (playPromise !== undefined) {
@@ -130,6 +131,11 @@ export default function TenFramePage() {
           Restart
         </button>
       </header>
+
+      {/* Audio Elements */}
+      <audio ref={correctSound} src="/sounds/correct.mp3" preload="auto" />
+      <audio ref={wrongSound} src="/sounds/wrong.mp3" preload="auto" />
+      <audio ref={gameEndSound} src="/sounds/game-end.mp3" preload="auto" />
 
       {/* Main Content */}
       <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
