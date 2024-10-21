@@ -4,11 +4,12 @@ interface ButtonsGridProps {
 
 export default function ButtonsGrid({ onClick }: ButtonsGridProps) {
   return (
-    <div className="grid grid-cols-5 gap-x-12 gap-y-4">
+    <div className="w-full h-full grid grid-cols-5 grid-rows-4">
       {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
         <button
           key={num}
-          className="px-10 py-4 rounded-lg shadow-md bg-blue-500 text-white font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full h-full flex items-center justify-center 
+                     bg-gray-200 text-xl font-semibold border border-gray-300 hover:bg-gray-300 transition"
           onClick={() => onClick(num)}
         >
           {num}

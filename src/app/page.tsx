@@ -20,7 +20,6 @@ export default function TenFramePage() {
   const [gameOver, setGameOver] = useState(false);
   const [gameTime, setGameTime] = useState(120); // Default 2 minutes
 
-  // Audio references
   const correctSound = useRef<HTMLAudioElement | null>(null);
   const wrongSound = useRef<HTMLAudioElement | null>(null);
   const gameEndSound = useRef<HTMLAudioElement | null>(null);
@@ -117,14 +116,21 @@ export default function TenFramePage() {
         </button>
       </div>
 
-      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-gray-400">
-        <div className="flex items-center justify-center border-r border-gray-400 p-4 overflow-hidden">
+      {/* Game Layout with "+" Symbol in the Center */}
+      <div className="flex-1 grid grid-cols-3 gap-4 items-center">
+        <div className="flex items-center justify-center p-4 overflow-hidden">
           {mode !== "start" ? (
             <TenFrame filledCells={leftNumber!} />
           ) : (
             <div className="text-4xl md:text-5xl">{leftNumber}</div>
           )}
         </div>
+
+        {/* "+" Symbol in the Middle */}
+        <div className="flex items-center justify-center">
+          <div className="text-5xl md:text-6xl">+</div>
+        </div>
+
         <div className="flex items-center justify-center p-4 overflow-hidden">
           {mode === "double" ? (
             <TenFrame filledCells={rightNumber!} />
