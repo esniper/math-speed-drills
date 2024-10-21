@@ -18,7 +18,7 @@ export default function TenFramePage() {
   const [mode, setMode] = useState<"start" | "single" | "double" | null>(null);
   const [seconds, setSeconds] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const [gameTime, setGameTime] = useState(120); // Default 2 minutes
+  const [gameTime, setGameTime] = useState(120);
 
   const correctSound = useRef<HTMLAudioElement | null>(null);
   const wrongSound = useRef<HTMLAudioElement | null>(null);
@@ -86,7 +86,7 @@ export default function TenFramePage() {
     }
   };
 
-  // Dynamically set the height to handle mobile browsers' UI changes
+  // Dynamically set the height to handle mobile browser UI changes
   useEffect(() => {
     const updateHeight = () => {
       document.documentElement.style.setProperty(
@@ -95,8 +95,8 @@ export default function TenFramePage() {
       );
     };
 
-    updateHeight(); // Set height on mount
-    window.addEventListener("resize", updateHeight); // Update height on resize
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
 
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
@@ -120,11 +120,8 @@ export default function TenFramePage() {
       className="flex flex-col bg-gray-100 p-4 md:p-8 overflow-hidden"
       style={{ height: "calc(var(--vh) * 100)" }}
     >
-      <audio ref={correctSound} src="/sounds/correct.mp3" preload="auto" />
-      <audio ref={wrongSound} src="/sounds/wrong.mp3" preload="auto" />
-      <audio ref={gameEndSound} src="/sounds/game-end.mp3" preload="auto" />
-
-      <div className="absolute top-4 right-4 m-4 flex items-center gap-4">
+      {/* Header */}
+      <header className="w-full flex justify-between items-center mb-4">
         <div className="text-lg md:text-xl font-semibold">Time: {seconds}s</div>
         <button
           className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
@@ -132,8 +129,9 @@ export default function TenFramePage() {
         >
           Restart
         </button>
-      </div>
+      </header>
 
+      {/* Main Content */}
       <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
         <div className="flex items-center justify-center p-4 overflow-hidden">
           {mode !== "start" ? (
@@ -156,6 +154,7 @@ export default function TenFramePage() {
         </div>
       </div>
 
+      {/* Buttons Grid and Scoreboard */}
       <div className="flex-1 flex flex-col items-center justify-between py-4 md:py-8">
         <Scoreboard correctCount={correctCount} wrongCount={wrongCount} />
         <div className="w-full h-full">
