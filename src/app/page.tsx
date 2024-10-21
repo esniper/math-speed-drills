@@ -15,12 +15,12 @@ export default function TenFramePage() {
   const [rightNumber, setRightNumber] = useState<number | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
-  const [showTenFrame, setShowTenFrame] = useState<boolean | null>(null);
-  const [showBothTenFrames, setShowBothTenFrames] = useState(false);
+  const [mode, setMode] = useState<"start" | "single" | "double" | null>(null);
   const [seconds, setSeconds] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameTime, setGameTime] = useState(120); // Default 2 minutes
 
+  // Audio references
   const correctSound = useRef<HTMLAudioElement | null>(null);
   const wrongSound = useRef<HTMLAudioElement | null>(null);
   const gameEndSound = useRef<HTMLAudioElement | null>(null);
@@ -50,9 +50,8 @@ export default function TenFramePage() {
     setRightNumber(num2);
   };
 
-  const handleStart = (withTenFrame: boolean, bothFrames: boolean) => {
-    setShowTenFrame(withTenFrame);
-    setShowBothTenFrames(bothFrames);
+  const handleStart = (selectedMode: "start" | "single" | "double") => {
+    setMode(selectedMode);
     setGameOver(false);
     setSeconds(0);
     nextProblem();
@@ -63,7 +62,7 @@ export default function TenFramePage() {
     setWrongCount(0);
     setSeconds(0);
     setGameOver(false);
-    setShowTenFrame(null);
+    setMode(null); // Go back to the start screen
   };
 
   const handleButtonClick = (number: number) => {
@@ -98,24 +97,16 @@ export default function TenFramePage() {
     );
   }
 
-  if (showTenFrame === null) {
-    return (
-      <StartScreen
-        onStart={(withTenFrame, bothFrames) =>
-          handleStart(withTenFrame, bothFrames)
-        }
-      />
-    );
+  if (mode === null) {
+    return <StartScreen onStart={handleStart} />;
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-100 p-4 md:p-8">
-      {/* Preload audio elements */}
+    <div className="h-screen min-h-screen flex flex-col bg-gray-100 p-4 md:p-8 overflow-hidden">
       <audio ref={correctSound} src="/sounds/correct.mp3" preload="auto" />
       <audio ref={wrongSound} src="/sounds/wrong.mp3" preload="auto" />
       <audio ref={gameEndSound} src="/sounds/game-end.mp3" preload="auto" />
 
-      {/* Timer and Restart Button */}
       <div className="absolute top-4 right-4 flex items-center gap-4">
         <div className="text-lg md:text-xl font-semibold">Time: {seconds}s</div>
         <button
@@ -126,13 +117,16 @@ export default function TenFramePage() {
         </button>
       </div>
 
-      {/* Game Layout */}
       <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-gray-400">
-        <div className="flex items-center justify-center border-r border-gray-400 p-4">
-          <TenFrame filledCells={leftNumber!} />
+        <div className="flex items-center justify-center border-r border-gray-400 p-4 overflow-hidden">
+          {mode !== "start" ? (
+            <TenFrame filledCells={leftNumber!} />
+          ) : (
+            <div className="text-4xl md:text-5xl">{leftNumber}</div>
+          )}
         </div>
-        <div className="flex items-center justify-center p-4">
-          {showBothTenFrames ? (
+        <div className="flex items-center justify-center p-4 overflow-hidden">
+          {mode === "double" ? (
             <TenFrame filledCells={rightNumber!} />
           ) : (
             <div className="text-4xl md:text-5xl">{rightNumber}</div>
@@ -140,8 +134,7 @@ export default function TenFramePage() {
         </div>
       </div>
 
-      {/* Bottom Section */}
-      <div className="flex-1 flex flex-col items-center py-4 md:py-8">
+      <div className="flex-1 flex flex-col items-center justify-between py-4 md:py-8 overflow-hidden">
         <Scoreboard correctCount={correctCount} wrongCount={wrongCount} />
         <ButtonsGrid onClick={handleButtonClick} />
       </div>
